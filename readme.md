@@ -1,5 +1,5 @@
-#School Diary for teachers
+# School Diary for teachers
 
-##Course work
+## Course work
 
-**by Titov Vladislav**
+*by Titov Vladislav*
