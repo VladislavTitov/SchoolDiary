@@ -1,0 +1,182 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="createUsers" author="vladislav">
+        <createTable tableName="users">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="createSubjects" author="vladislav">
+        <createTable tableName="subjects">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="createClasses" author="vladislav">
+        <createTable tableName="classes">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(4)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createLessons" author="vladislav">
+        <createTable tableName="lessons">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="date_lesson" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number" type="INTEGER">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="class_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createHomeworks" author="vladislav">
+        <createTable tableName="homeworks">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="lesson_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createStudents" author="vladislav">
+        <createTable tableName="students">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="lastname" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patronymic" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="class_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createScores" author="vladislav">
+        <createTable tableName="scores">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="score" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="student_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lesson_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+
+
+
+    <changeSet id="addForeignKeyToSubjects" author="vladislav">
+        <addForeignKeyConstraint baseTableName="subjects" baseColumnNames="user_id" constraintName="fk0_subjects"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="addForeignKeyToClasses" author="vladislav">
+        <addForeignKeyConstraint baseTableName="classes" baseColumnNames="user_id" constraintName="fk0_classes"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="addForeignKeysToLessons" author="vladislav">
+        <addForeignKeyConstraint baseTableName="lessons" baseColumnNames="user_id" constraintName="fk0_lessons"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="lessons" baseColumnNames="subject_id" constraintName="fk1_lessons"
+                                 referencedTableName="subjects"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="lessons" baseColumnNames="class_id" constraintName="fk2_lessons"
+                                 referencedTableName="classes"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="addForeignKeyToHomeworks" author="vladislav">
+        <addForeignKeyConstraint baseTableName="homeworks" baseColumnNames="lesson_id" constraintName="fk0_homeworks"
+                                 referencedTableName="lessons"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+    </changeSet>
+    <changeSet id="addForeignKeyToStudents" author="vladislav">
+        <addForeignKeyConstraint baseTableName="students" baseColumnNames="class_id" constraintName="fk0_students"
+                                 referencedTableName="classes"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+    </changeSet>
+    <changeSet id="addForeignKeysToScores" author="vladislav">
+        <addForeignKeyConstraint baseTableName="scores" baseColumnNames="student_id" constraintName="fk0_scores"
+                                 referencedTableName="students"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="scores" baseColumnNames="lesson_id" constraintName="fk1_scores"
+                                 referencedTableName="lessons"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+    </changeSet>
+
+
+
+
+    <changeSet id="changelog-tag-1.0.0" author="vladislav">
+        <tagDatabase tag="1.0.0"/>
+    </changeSet>
+
+</databaseChangeLog>
