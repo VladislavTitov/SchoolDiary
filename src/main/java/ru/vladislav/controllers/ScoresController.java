@@ -34,6 +34,17 @@ public class ScoresController {
         return new ResponseEntity<List<ScoreDto>>(scoresService.getAllByLessonId(lessonId), HttpStatus.OK);
     }
 
+    @PutMapping("/users/{userId}/lessons/{lessonId}/scores/{scoreId}")
+    public ResponseEntity<Object> update(@PathVariable("userId") Long userId, @PathVariable("lessonId") Long lessonId,
+                                           @PathVariable("scoreId") Long scoreId, @RequestBody ScoreDto scoreDto){
+        boolean success = scoresService.update(scoreDto);
+        if (success){
+            return new ResponseEntity<>(null, HttpStatus.ACCEPTED);
+        }else {
+            return new ResponseEntity<Object>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @DeleteMapping("/users/{userId}/lessons/{lessonId}/scores/{scoreId}")
     public ResponseEntity<Object> remove(@PathVariable("userId") Long userId, @PathVariable("lessonId") Long lessonId,
                                             @PathVariable("scoreId") Long scoreId){

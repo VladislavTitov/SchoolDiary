@@ -57,9 +57,17 @@ public class ScoresService {
         return lesson.getScores().stream().map(ScoreConverter::toScoreDto).collect(Collectors.toList());
     }
 
-    /*public ScoreDto update(ScoreDto scoreDto){
-        return null;
-    }*/
+    public boolean update(ScoreDto scoreDto){
+        Score oldScore = scoresRepo.findOne(scoreDto.getId());
+        if (oldScore == null){
+            return false;
+        }
+        if (scoreDto.getScore() < 1 && scoreDto.getScore() > 5 && scoreDto.getScore() == oldScore.getScore()){
+            return false;
+        }
+        int code = scoresRepo.update(scoreDto.getId(), scoreDto.getScore());
+        return code == 1;
+    }
 
     public void remove(Long id){
         scoresRepo.delete(id);
